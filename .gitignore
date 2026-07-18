@@ -1,0 +1,10 @@
+# WezTerm runtime artifacts (future-proofing; none exist today)
+wezterm.log
+wezterm.sqlite3
+wezterm.sqlite3-journal
+
+# Editor / OS noise
+.DS_Store
+*.swp
+*.swo
+*~
