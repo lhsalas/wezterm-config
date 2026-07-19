@@ -188,9 +188,7 @@ wezterm.on('update-status', function(window, _)
     { Text = left_arrow },
   })
 
-  window:set_right_status(wezterm.format {
-    { Text = wezterm.strftime('%H:%M:%S') },
-  })
+  window:set_right_status('')
 end)
 
 config.color_schemes = {
