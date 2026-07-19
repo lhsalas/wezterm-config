@@ -172,21 +172,27 @@ wezterm.on('update-status', function(window, _)
     end
   end
 
-  window:set_left_status(wezterm.format {
-    { Background = { Color = '#808080' } },
-    { Foreground = { Color = '#000000' } },
-    { Attribute = { Intensity = 'Bold' } },
-    { Text = ' ' .. workspace .. ' ' },
-    { Background = { Color = '#1a1a1a' } },
-    { Foreground = { Color = '#ffffff' } },
-    { Text = ' ' .. title .. ' ' },
-    { Background = { Color = leader_active and '#F81CE5' or '#000000' } },
-    { Foreground = { Color = '#000000' } },
-    { Text = prefix },
-    arrow_fg,
-    arrow_bg,
-    { Text = left_arrow },
-  })
+  local segments = {}
+
+  if workspace ~= 'default' then
+    table.insert(segments, { Background = { Color = '#808080' } })
+    table.insert(segments, { Foreground = { Color = '#000000' } })
+    table.insert(segments, { Attribute = { Intensity = 'Bold' } })
+    table.insert(segments, { Text = ' ' .. workspace .. ' ' })
+  end
+
+  table.insert(segments, { Background = { Color = '#1a1a1a' } })
+  table.insert(segments, { Foreground = { Color = '#ffffff' } })
+  table.insert(segments, { Text = ' ' .. title .. ' ' })
+
+  table.insert(segments, { Background = { Color = leader_active and '#F81CE5' or '#000000' } })
+  table.insert(segments, { Foreground = { Color = '#000000' } })
+  table.insert(segments, { Text = prefix })
+  table.insert(segments, arrow_fg)
+  table.insert(segments, arrow_bg)
+  table.insert(segments, { Text = left_arrow })
+
+  window:set_left_status(wezterm.format(segments))
 
   window:set_right_status('')
 end)
