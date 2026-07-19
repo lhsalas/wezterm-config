@@ -58,7 +58,7 @@ config.key_tables = {
     },
     { key = 'o', action = act.RotatePanes('Clockwise') },
 
-    { key = '[', action = act.ActivateCopyMode({ prior_cwd_mode = 'NoChange' }) },
+    { key = '[', action = act.ActivateCopyMode },
     { key = ']', action = act.PasteFrom('Clipboard') },
 
     { key = 'n', action = act.ActivateTabRelative(1) },
