@@ -125,6 +125,56 @@ Open `wezterm.lua` and adjust:
 WezTerm auto-reloads the config on save. To force a reload, press
 `Ctrl+Shift+R` inside any WezTerm window.
 
+## Multiplexing & tmux-style keybindings
+
+WezTerm's mux is always on: panes, tabs, and windows are managed by a
+background server, so closing and reopening the GUI preserves your
+session state while the mux server is alive. (Note: closing the **last**
+window still quits the app — there is no implicit `tmux`-style detach on
+close. Use `prefix + d` to detach explicitly.)
+
+### Leader key
+
+The prefix is **`Ctrl+B`**, identical to tmux's default. Press it once,
+then a key within 1 second. While the leader is active, a magenta
+`LEADER` badge appears in the right side of the status area.
+
+### Bindings
+
+| Key                  | Action                                                         |
+| -------------------- | -------------------------------------------------------------- |
+| `c`                  | New tab                                                        |
+| `"` / `%`            | Split pane horizontally / vertically                           |
+| arrows or `hjkl`     | Move focus to pane in direction                                |
+| `x`                  | Close focused pane (with confirmation)                         |
+| `z`                  | Toggle pane zoom                                               |
+| `!`                  | Break the focused pane out into its own tab                    |
+| `o`                  | Rotate panes (clockwise)                                       |
+| `[` / `]`            | Enter copy mode / paste from clipboard                         |
+| `n` / `p`            | Next / previous tab                                            |
+| `0`–`9`              | Activate tab by index                                          |
+| `L` / `Tab`          | Activate last-active tab                                       |
+| `,`                  | Rename current tab                                             |
+| `&`                  | Close current tab (with confirmation)                          |
+| `w`                  | Show tab navigator                                             |
+| `s`                  | Open command palette (workspaces, commands, …)                 |
+| `:` / `?`            | Open command palette                                           |
+| `d`                  | Detach from the `unix` mux domain                              |
+| `q` / `Escape`       | Exit the leader key table                                      |
+
+Copy mode itself is vim-like (matches tmux `copy-mode-vi`).
+
+### Status line
+
+The status area lives in the tab bar at the top of the window:
+
+- **Left**: workspace name on a magenta background, then the active tab's
+  title.
+- **Right**: 24-hour clock, and a `LEADER` badge while the prefix key is
+  active.
+
+Updates run once per second (`status_update_interval = 1000`).
+
 ## Related
 
 - Alacritty sister theme: `~/Develop/Alacritty-Theme/Hyper-OLED.toml`
