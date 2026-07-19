@@ -116,14 +116,14 @@ wezterm.on('format-tab-title', function(tab, tabs, panes, cfg, hover, max_width)
   if tab.is_active then
     return {
       { Background = { Color = '#000000' } },
-      { Foreground = { Color = '#F81CE5' } },
+      { Foreground = { Color = '#808080' } },
       { Text = left_edge },
-      { Background = { Color = '#F81CE5' } },
+      { Background = { Color = '#808080' } },
       { Foreground = { Color = '#000000' } },
       { Attribute = { Intensity = 'Bold' } },
       { Text = title_text },
       { Background = { Color = '#000000' } },
-      { Foreground = { Color = '#F81CE5' } },
+      { Foreground = { Color = '#808080' } },
       { Text = right_edge },
     }
   end
@@ -173,14 +173,14 @@ wezterm.on('update-status', function(window, _)
   end
 
   window:set_left_status(wezterm.format {
-    { Background = { Color = '#F81CE5' } },
+    { Background = { Color = '#808080' } },
     { Foreground = { Color = '#000000' } },
     { Attribute = { Intensity = 'Bold' } },
     { Text = ' ' .. workspace .. ' ' },
     { Background = { Color = '#1a1a1a' } },
     { Foreground = { Color = '#ffffff' } },
     { Text = ' ' .. title .. ' ' },
-    { Background = { Color = '#F81CE5' } },
+    { Background = { Color = leader_active and '#F81CE5' or '#000000' } },
     { Foreground = { Color = '#000000' } },
     { Text = prefix },
     arrow_fg,
