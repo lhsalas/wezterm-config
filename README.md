@@ -155,7 +155,7 @@ separator appear in the status area, in Hyper-OLED magenta on black.
 | `h` / `j` / `k` / `l` | Move focus to pane left / down / up / right                    |
 | arrows                | Resize focused pane in that direction                          |
 | `b` / `n`             | Previous / next tab                                            |
-| `0`–`9`               | Activate tab by index                                          |
+| `0`–`9`               | Activate tab by index (0-based: `0` is the first tab)          |
 | `z`                   | Toggle pane zoom                                               |
 | `!`                   | Break the focused pane out into its own tab                    |
 | `o`                   | Rotate panes (clockwise)                                       |
@@ -172,7 +172,9 @@ Copy mode itself is vim-like (matches tmux `copy-mode-vi`).
 ### Tab title style
 
 `format-tab-title` renders active tabs as `<index>: <title>` with the
-title drawn in black on Hyper-OLED magenta. There is a local toggle at
+title drawn in black on Hyper-OLED grey (`#808080`). Tab indices are
+zero-based (`tab_and_split_indices_are_zero_based = true`), so the
+leftmost tab shows `0: title`. There is a local toggle at
 the top of `wezterm.lua`:
 
 ```lua

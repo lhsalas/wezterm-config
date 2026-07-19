@@ -18,6 +18,7 @@ config.window_background_opacity = 1.0
 
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
+config.tab_and_split_indices_are_zero_based = true
 
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.status_update_interval = 1000
@@ -101,7 +102,7 @@ local function tab_title(tab_info)
 end
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, cfg, hover, max_width)
-  local index = tab.tab_index + 1
+  local index = tab.tab_index
   local title_text = ' ' .. index .. ': ' .. tab_title(tab) .. ' '
   local left_edge = ''
   local right_edge = ''
