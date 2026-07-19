@@ -147,7 +147,7 @@ wezterm.on('update-status', function(window, _)
   local leader_active = window:leader_is_active()
   local wave = utf8.char(0x1f30a)
   local left_arrow = ''
-  local arrow_fg = { Foreground = { Color = '#F81CE5' } }
+  local arrow_fg = { Foreground = { Color = '#808080' } }
   local arrow_bg = { Background = { Color = '#000000' } }
   local prefix = ''
 
@@ -164,7 +164,7 @@ wezterm.on('update-status', function(window, _)
       local tabs = window:mux_window():tabs_with_info()
       for _, tab_info in ipairs(tabs) do
         if tab_info.is_active and tab_info.index == 0 then
-          arrow_bg = { Foreground = { Color = '#F81CE5' } }
+          arrow_bg = { Foreground = { Color = '#808080' } }
           left_arrow = wezterm.nerdfonts.pl_right_hard_divider
           break
         end
@@ -187,7 +187,7 @@ wezterm.on('update-status', function(window, _)
   table.insert(segments, { Text = is_default and title or (' ' .. title .. ' ') })
 
   table.insert(segments, { Background = { Color = '#000000' } })
-  table.insert(segments, { Foreground = { Color = '#000000' } })
+  table.insert(segments, { Foreground = { Color = '#808080' } })
   table.insert(segments, { Text = prefix })
   table.insert(segments, arrow_fg)
   table.insert(segments, arrow_bg)
