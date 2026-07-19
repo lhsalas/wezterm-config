@@ -191,7 +191,7 @@ The status area lives in the tab bar at the top of the window:
 - **Left**: workspace name on Hyper-OLED magenta, then the active tab's
   title on dark gray, then (when the leader is active) the wave emoji
   and an arrow separator.
-- **Right**: 24-hour clock.
+- **Right**: empty (clock removed).
 
 Updates run once per second (`status_update_interval = 1000`).
 
