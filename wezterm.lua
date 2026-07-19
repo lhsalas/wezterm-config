@@ -12,8 +12,8 @@ config.window_decorations = 'NONE'
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 config.window_background_opacity = 1.0
 
-config.tab_bar_at_bottom = false
-config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
+config.use_fancy_tab_bar = true
 
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.status_update_interval = 1000
