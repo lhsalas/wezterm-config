@@ -19,8 +19,9 @@ decorations, and padding rules for cross-terminal visual consistency.
 - **OLED-tuned ANSI palette** — saturated channels (especially blue, which
   is the least efficient OLED sub-pixel) are dimmed ~20% vs. the original
   Hyper palette to reduce sub-pixel usage without hurting readability.
-- **Hyper-magenta cursor + selection** (`#F81CE5`) — high-contrast accent
-  color that pops on true black.
+- **Hyper-magenta selection + cursor text** (`#F81CE5`) — high-contrast
+  accent color that pops on true black; cursor itself is a blinking white
+  block so it stays visible on the black background.
 - **Retro tab bar** in solid `#000000`; active vs. inactive tabs differ only
   by font intensity (Normal / Half) and foreground, so no tab-area pixels
   are lit to indicate focus.
@@ -64,7 +65,7 @@ ln -s ~/Develop/wezterm-config/wezterm.lua ~/.config/wezterm/wezterm.lua
 | ----------- | --------- | -------------------------------------- |
 | Background  | `#000000` | True black                             |
 | Foreground  | `#ffffff` | Default text                           |
-| Cursor      | `#F81CE5` | Magenta border on a block cursor       |
+| Cursor      | `#ffffff` / `#F81CE5` | Blinking white block, magenta text inside |
 | Selection   | `#F81CE5` | Magenta background, black text         |
 
 ### ANSI (normal)

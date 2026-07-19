@@ -2,6 +2,7 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 config.color_scheme = 'Hyper-OLED'
+config.default_cursor_style = 'BlinkingBlock'
 
 config.font = wezterm.font 'Hack Nerd Font'
 config.font_size = 11.0
@@ -17,8 +18,8 @@ config.color_schemes = {
   ['Hyper-OLED'] = {
     background = '#000000',
     foreground = '#ffffff',
-    cursor_bg = '#000000',
-    cursor_fg = '#ffffff',
+    cursor_bg = '#ffffff',
+    cursor_fg = '#F81CE5',
     cursor_border = '#F81CE5',
     selection_bg = '#F81CE5',
     selection_fg = '#000000',
