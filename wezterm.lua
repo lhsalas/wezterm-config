@@ -172,20 +172,21 @@ wezterm.on('update-status', function(window, _)
     end
   end
 
+  local is_default = workspace == 'default'
   local segments = {}
 
-  if workspace ~= 'default' then
+  if not is_default then
     table.insert(segments, { Background = { Color = '#808080' } })
     table.insert(segments, { Foreground = { Color = '#000000' } })
     table.insert(segments, { Attribute = { Intensity = 'Bold' } })
     table.insert(segments, { Text = ' ' .. workspace .. ' ' })
   end
 
-  table.insert(segments, { Background = { Color = '#1a1a1a' } })
+  table.insert(segments, { Background = { Color = is_default and '#000000' or '#1a1a1a' } })
   table.insert(segments, { Foreground = { Color = '#ffffff' } })
-  table.insert(segments, { Text = ' ' .. title .. ' ' })
+  table.insert(segments, { Text = is_default and title or (' ' .. title .. ' ') })
 
-  table.insert(segments, { Background = { Color = leader_active and '#F81CE5' or '#000000' } })
+  table.insert(segments, { Background = { Color = '#000000' } })
   table.insert(segments, { Foreground = { Color = '#000000' } })
   table.insert(segments, { Text = prefix })
   table.insert(segments, arrow_fg)
