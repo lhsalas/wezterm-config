@@ -50,7 +50,12 @@ config.key_tables = {
 
     { key = 'x', action = act.CloseCurrentPane({ confirm = true }) },
     { key = 'z', action = act.TogglePaneZoomState },
-    { key = '!', action = act.MovePaneToNewTab() },
+    {
+      key = '!',
+      action = wezterm.action_callback(function(win, pane)
+        pane:move_to_new_tab()
+      end),
+    },
     { key = 'o', action = act.RotatePanes('Clockwise') },
 
     { key = '[', action = act.ActivateCopyMode({ prior_cwd_mode = 'NoChange' }) },
@@ -72,10 +77,18 @@ config.key_tables = {
     { key = '8', action = act.ActivateTab(8) },
     { key = '9', action = act.ActivateTab(9) },
 
-    { key = ',', action = act.PromptInputLine({
-      prompt = 'Rename tab: ',
-      action = act.SwitchToWorkspace,
-    }) },
+    {
+      key = ',',
+      action = act.PromptInputLine({
+        description = 'Rename tab',
+        initial_value = '',
+        action = wezterm.action_callback(function(window, pane, line)
+          if line and line ~= '' then
+            window:active_tab():set_title(line)
+          end
+        end),
+      }),
+    },
     { key = '&', action = act.CloseCurrentTab({ confirm = true }) },
 
     { key = 'w', action = act.ShowTabNavigator },
