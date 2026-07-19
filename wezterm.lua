@@ -155,9 +155,9 @@ wezterm.on('update-status', function(window, _)
     prefix = ' ' .. wave
 
     if tab_style == 'rounded' then
-      left_arrow = wezterm.nerdfonts.ple_right_half_circle_thick
+      left_arrow = wezterm.nerdfonts.ple_left_half_circle_thick
     else
-      left_arrow = wezterm.nerdfonts.pl_left_hard_divider
+      left_arrow = wezterm.nerdfonts.pl_right_hard_divider
     end
 
     if tab_style ~= 'rounded' then
@@ -165,7 +165,7 @@ wezterm.on('update-status', function(window, _)
       for _, tab_info in ipairs(tabs) do
         if tab_info.is_active and tab_info.index == 0 then
           arrow_bg = { Foreground = { Color = '#808080' } }
-          left_arrow = wezterm.nerdfonts.pl_right_hard_divider
+          left_arrow = wezterm.nerdfonts.pl_left_hard_divider
           break
         end
       end
