@@ -12,8 +12,8 @@ config.window_decorations = 'NONE'
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 config.window_background_opacity = 1.0
 
-config.tab_bar_at_bottom = true
-config.use_fancy_tab_bar = true
+config.tab_bar_at_bottom = false
+config.use_fancy_tab_bar = false
 
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.status_update_interval = 1000
@@ -116,11 +116,6 @@ wezterm.on('update-status', function(window, pane)
   elseif kt then
     mode_badge = wezterm.format({ { Text = '[' .. kt .. ']' } })
   end
-
-  window:set_right_status(wezterm.format({
-    { Text = wezterm.strftime('%H:%M:%S') .. '  ' },
-    { Text = mode_badge },
-  }))
 
   local workspace = window:active_workspace() or 'default'
   local tab = window:active_tab()
