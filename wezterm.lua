@@ -96,7 +96,7 @@ config.key_tables = {
     { key = ':', action = act.ActivateCommandPalette },
     { key = '?', action = act.ActivateCommandPalette },
 
-    { key = 'd', action = act.DetachDomain('unix') },
+    { key = 'd', action = act.DetachDomain('CurrentPaneDomain') },
 
     { key = 'q', action = act.PopKeyTable },
     { key = 'Escape', action = act.PopKeyTable },
