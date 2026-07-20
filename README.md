@@ -170,6 +170,11 @@ it once, then a key within 1 second.
 | **Pane ops** |                                                              |
 | arrows                | Move focus to pane in that direction                           |
 | `Ctrl` + arrows       | Resize focused pane in that direction                         |
+
+After the leader + arrow combo, the action enters a 1-second repeat
+mode (tmux-style): subsequent presses of the same key (bare arrow for
+navigation, `Ctrl` + arrow for resize) repeat the action; 1s of
+inactivity exits the mode. `Esc` exits immediately.
 | `o`                   | Rotate panes (clockwise)                                       |
 | `;`                   | Jump back to the previously-focused pane                       |
 | `q`                   | Show pane numbers and jump to one by label                     |
