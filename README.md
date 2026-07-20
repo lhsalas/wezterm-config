@@ -168,8 +168,8 @@ it once, then a key within 1 second.
 | `%`                   | Split pane vertically                                          |
 | `"`                   | Split pane horizontally                                        |
 | **Pane ops** |                                                              |
-| `h` / `j` / `k` / `l` | Move focus to pane left / down / up / right (vim-style)        |
-| arrows                | Resize focused pane in that direction                          |
+| arrows                | Move focus to pane in that direction                           |
+| `Ctrl` + arrows       | Resize focused pane in that direction                         |
 | `o`                   | Rotate panes (clockwise)                                       |
 | `;`                   | Jump back to the previously-focused pane                       |
 | `q`                   | Show pane numbers and jump to one by label                     |

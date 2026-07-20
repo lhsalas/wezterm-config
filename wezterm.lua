@@ -41,17 +41,17 @@ config.keys = {
   { mods = 'LEADER|SHIFT', key = '%', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
   { mods = 'LEADER|SHIFT', key = '"', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
 
-  -- Pane navigation (vim-style; wezterm idiom; not a tmux default)
-  { mods = 'LEADER', key = 'h', action = act.ActivatePaneDirection 'Left' },
-  { mods = 'LEADER', key = 'j', action = act.ActivatePaneDirection 'Down' },
-  { mods = 'LEADER', key = 'k', action = act.ActivatePaneDirection 'Up' },
-  { mods = 'LEADER', key = 'l', action = act.ActivatePaneDirection 'Right' },
+  -- Pane navigation (LEADER + arrow key)
+  { mods = 'LEADER', key = 'LeftArrow',  action = act.ActivatePaneDirection 'Left' },
+  { mods = 'LEADER', key = 'RightArrow', action = act.ActivatePaneDirection 'Right' },
+  { mods = 'LEADER', key = 'DownArrow',  action = act.ActivatePaneDirection 'Down' },
+  { mods = 'LEADER', key = 'UpArrow',    action = act.ActivatePaneDirection 'Up' },
 
-  -- Pane resize (matches tmux `prefix M-Up/Down/Left/Right`)
-  { mods = 'LEADER', key = 'LeftArrow',  action = act.AdjustPaneSize { 'Left',  5 } },
-  { mods = 'LEADER', key = 'RightArrow', action = act.AdjustPaneSize { 'Right', 5 } },
-  { mods = 'LEADER', key = 'DownArrow',  action = act.AdjustPaneSize { 'Down',  5 } },
-  { mods = 'LEADER', key = 'UpArrow',    action = act.AdjustPaneSize { 'Up',    5 } },
+  -- Pane resize (LEADER + CTRL + arrow key)
+  { mods = 'LEADER|CTRL', key = 'LeftArrow',  action = act.AdjustPaneSize { 'Left',  5 } },
+  { mods = 'LEADER|CTRL', key = 'RightArrow', action = act.AdjustPaneSize { 'Right', 5 } },
+  { mods = 'LEADER|CTRL', key = 'DownArrow',  action = act.AdjustPaneSize { 'Down',  5 } },
+  { mods = 'LEADER|CTRL', key = 'UpArrow',    action = act.AdjustPaneSize { 'Up',    5 } },
 
   -- Pane ops (tmux `prefix o` rotate, `prefix ;` last, `prefix q` display,
   -- `prefix {` / `prefix }` swap, `prefix z` zoom, `prefix !` break-pane)
@@ -90,7 +90,7 @@ config.keys = {
   { mods = 'LEADER', key = 'n', action = act.ActivateTabRelative(1) },
   { mods = 'LEADER', key = 'p', action = act.ActivateTabRelative(-1) },
   {
-    mods = 'LEADER|SHIFT',
+    mods = 'LEADER',
     key = "'",
     action = act.PromptInputLine {
       description = wezterm.format {
