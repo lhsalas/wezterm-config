@@ -37,9 +37,9 @@ config.keys = {
   { mods = 'LEADER', key = 'x', action = act.CloseCurrentPane { confirm = true } },
   { mods = 'LEADER|SHIFT', key = '&', action = act.CloseCurrentTab { confirm = true } },
 
-  -- Splits (tmux `prefix %` vertical, `prefix "` horizontal)
-  { mods = 'LEADER|SHIFT', key = '%', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
-  { mods = 'LEADER|SHIFT', key = '"', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  -- Splits (tmux `prefix %` L/R, `prefix "` T/B)
+  { mods = 'LEADER|SHIFT', key = '%', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { mods = 'LEADER|SHIFT', key = '"', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
 
   -- Pane navigation (LEADER + arrow key)
   { mods = 'LEADER', key = 'LeftArrow',  action = act.ActivatePaneDirection 'Left' },
