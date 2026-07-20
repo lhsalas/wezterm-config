@@ -41,17 +41,57 @@ config.keys = {
   { mods = 'LEADER|SHIFT', key = '%', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
   { mods = 'LEADER|SHIFT', key = '"', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
 
-  -- Pane navigation (LEADER + arrow key)
-  { mods = 'LEADER', key = 'LeftArrow',  action = act.ActivatePaneDirection 'Left' },
-  { mods = 'LEADER', key = 'RightArrow', action = act.ActivatePaneDirection 'Right' },
-  { mods = 'LEADER', key = 'DownArrow',  action = act.ActivatePaneDirection 'Down' },
-  { mods = 'LEADER', key = 'UpArrow',    action = act.ActivatePaneDirection 'Up' },
+  -- Pane navigation (LEADER + arrow key, tmux-style repeat on subsequent arrow presses)
+  { mods = 'LEADER', key = 'LeftArrow',
+    action = act.Multiple {
+      act.ActivatePaneDirection 'Left',
+      act.ActivateKeyTable { name = 'pane_nav', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER', key = 'RightArrow',
+    action = act.Multiple {
+      act.ActivatePaneDirection 'Right',
+      act.ActivateKeyTable { name = 'pane_nav', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER', key = 'DownArrow',
+    action = act.Multiple {
+      act.ActivatePaneDirection 'Down',
+      act.ActivateKeyTable { name = 'pane_nav', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER', key = 'UpArrow',
+    action = act.Multiple {
+      act.ActivatePaneDirection 'Up',
+      act.ActivateKeyTable { name = 'pane_nav', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
 
-  -- Pane resize (LEADER + CTRL + arrow key)
-  { mods = 'LEADER|CTRL', key = 'LeftArrow',  action = act.AdjustPaneSize { 'Left',  5 } },
-  { mods = 'LEADER|CTRL', key = 'RightArrow', action = act.AdjustPaneSize { 'Right', 5 } },
-  { mods = 'LEADER|CTRL', key = 'DownArrow',  action = act.AdjustPaneSize { 'Down',  5 } },
-  { mods = 'LEADER|CTRL', key = 'UpArrow',    action = act.AdjustPaneSize { 'Up',    5 } },
+  -- Pane resize (LEADER + CTRL + arrow key, same tmux-style repeat behavior)
+  { mods = 'LEADER|CTRL', key = 'LeftArrow',
+    action = act.Multiple {
+      act.AdjustPaneSize { 'Left', 5 },
+      act.ActivateKeyTable { name = 'pane_resize', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER|CTRL', key = 'RightArrow',
+    action = act.Multiple {
+      act.AdjustPaneSize { 'Right', 5 },
+      act.ActivateKeyTable { name = 'pane_resize', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER|CTRL', key = 'DownArrow',
+    action = act.Multiple {
+      act.AdjustPaneSize { 'Down', 5 },
+      act.ActivateKeyTable { name = 'pane_resize', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
+  { mods = 'LEADER|CTRL', key = 'UpArrow',
+    action = act.Multiple {
+      act.AdjustPaneSize { 'Up', 5 },
+      act.ActivateKeyTable { name = 'pane_resize', timeout_milliseconds = 1000,
+                            one_shot = false, replace_current = true },
+    } },
 
   -- Pane ops (tmux `prefix o` rotate, `prefix ;` last, `prefix q` display,
   -- `prefix {` / `prefix }` swap, `prefix z` zoom, `prefix !` break-pane)
@@ -193,6 +233,23 @@ for i = 0, 9 do
     action = act.ActivateTab(i),
   })
 end
+
+config.key_tables = {
+  pane_nav = {
+    { key = 'LeftArrow',  action = act.ActivatePaneDirection 'Left'  },
+    { key = 'RightArrow', action = act.ActivatePaneDirection 'Right' },
+    { key = 'UpArrow',    action = act.ActivatePaneDirection 'Up'    },
+    { key = 'DownArrow',  action = act.ActivatePaneDirection 'Down'  },
+    { key = 'Escape',     action = act.PopKeyTable },
+  },
+  pane_resize = {
+    { key = 'LeftArrow',  mods = 'CTRL', action = act.AdjustPaneSize { 'Left',  5 } },
+    { key = 'RightArrow', mods = 'CTRL', action = act.AdjustPaneSize { 'Right', 5 } },
+    { key = 'UpArrow',    mods = 'CTRL', action = act.AdjustPaneSize { 'Up',    5 } },
+    { key = 'DownArrow',  mods = 'CTRL', action = act.AdjustPaneSize { 'Down',  5 } },
+    { key = 'Escape',     action = act.PopKeyTable },
+  },
+}
 
 local function tab_title(tab_info)
   local title = tab_info.tab_title
