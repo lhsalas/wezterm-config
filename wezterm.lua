@@ -23,60 +23,161 @@ config.tab_and_split_indices_are_zero_based = true
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.status_update_interval = 1000
 
+-- Per-window state used by tmux-faithful leader bindings that don't have a
+-- direct wezterm action (last-pane toggle, last-workspace jump).
+local leader_state = {
+  last_pane_idx = {},   -- [window_id] = int   (0-based; pane last focused)
+  last_workspace = {},   -- [window_id] = string (workspace we just left)
+  _current_ws = {},      -- [window_id] = string (workspace we last rendered)
+}
+
 config.keys = {
+  -- Window / tab control (tmux `prefix c`, `prefix x`, `prefix &`)
   { mods = 'LEADER', key = 'c', action = act.SpawnTab 'CurrentPaneDomain' },
   { mods = 'LEADER', key = 'x', action = act.CloseCurrentPane { confirm = true } },
+  { mods = 'LEADER', key = '&', action = act.CloseCurrentTab { confirm = true } },
 
-  { mods = 'LEADER|SHIFT', key = '|', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-  { mods = 'LEADER', key = '-', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
+  -- Splits (tmux `prefix %` vertical, `prefix "` horizontal)
+  { mods = 'LEADER', key = '%', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
+  { mods = 'LEADER', key = '"', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
 
+  -- Pane navigation (vim-style; wezterm idiom; not a tmux default)
   { mods = 'LEADER', key = 'h', action = act.ActivatePaneDirection 'Left' },
   { mods = 'LEADER', key = 'j', action = act.ActivatePaneDirection 'Down' },
   { mods = 'LEADER', key = 'k', action = act.ActivatePaneDirection 'Up' },
   { mods = 'LEADER', key = 'l', action = act.ActivatePaneDirection 'Right' },
 
+  -- Pane resize (matches tmux `prefix M-Up/Down/Left/Right`)
   { mods = 'LEADER', key = 'LeftArrow',  action = act.AdjustPaneSize { 'Left',  5 } },
   { mods = 'LEADER', key = 'RightArrow', action = act.AdjustPaneSize { 'Right', 5 } },
   { mods = 'LEADER', key = 'DownArrow',  action = act.AdjustPaneSize { 'Down',  5 } },
   { mods = 'LEADER', key = 'UpArrow',    action = act.AdjustPaneSize { 'Up',    5 } },
 
-  { mods = 'LEADER', key = 'b', action = act.ActivateTabRelative(-1) },
-  { mods = 'LEADER', key = 'n', action = act.ActivateTabRelative(1) },
-
+  -- Pane ops (tmux `prefix o` rotate, `prefix ;` last, `prefix q` display,
+  -- `prefix {` / `prefix }` swap, `prefix z` zoom, `prefix !` break-pane)
+  { mods = 'LEADER', key = 'o', action = act.RotatePanes 'Clockwise' },
+  {
+    mods = 'LEADER',
+    key = ';',
+    action = wezterm.action_callback(function(win, _)
+      local prev = leader_state.last_pane_idx[win:window_id()]
+      if prev then win:perform_action(act.ActivatePaneByIndex(prev), win:active_pane()) end
+    end),
+  },
+  { mods = 'LEADER', key = 'q', action = act.PaneSelect { show_pane_ids = true } },
+  {
+    mods = 'LEADER',
+    key = '{',
+    action = act.PaneSelect { mode = 'SwapWithActiveKeepFocus' },
+  },
+  {
+    mods = 'LEADER',
+    key = '}',
+    action = act.PaneSelect { mode = 'SwapWithActive' },
+  },
   { mods = 'LEADER', key = 'z', action = act.TogglePaneZoomState },
   {
     mods = 'LEADER',
     key = '!',
-    action = wezterm.action_callback(function(win, pane)
+    action = wezterm.action_callback(function(_, pane)
       pane:move_to_new_tab()
     end),
   },
-  { mods = 'LEADER', key = 'o', action = act.RotatePanes 'Clockwise' },
 
-  { mods = 'LEADER', key = '[', action = act.ActivateCopyMode },
-  { mods = 'LEADER', key = ']', action = act.PasteFrom 'Clipboard' },
-
+  -- Window / tab navigation (tmux `prefix n` next, `prefix p` prev,
+  -- `prefix '` choose-by-index, `prefix .` move-to-index, `prefix f` find,
+  -- `prefix ,` rename, `prefix w` list, `prefix 0-9` select)
+  { mods = 'LEADER', key = 'n', action = act.ActivateTabRelative(1) },
+  { mods = 'LEADER', key = 'p', action = act.ActivateTabRelative(-1) },
   {
     mods = 'LEADER',
-    key = ',',
+    key = "'",
     action = act.PromptInputLine {
-      description = 'Rename tab',
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Text = 'Tab index (0-based)' },
+      },
       initial_value = '',
-      action = wezterm.action_callback(function(window, pane, line)
+      action = wezterm.action_callback(function(win, _, line)
         if line and line ~= '' then
-          window:active_tab():set_title(line)
+          local idx = tonumber(line)
+          if idx then win:perform_action(act.ActivateTab(idx), win:active_pane()) end
         end
       end),
     },
   },
-  { mods = 'LEADER', key = '&', action = act.CloseCurrentTab { confirm = true } },
-
+  {
+    mods = 'LEADER',
+    key = '.',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Text = 'Move current tab to index' },
+      },
+      initial_value = '',
+      action = wezterm.action_callback(function(win, _, line)
+        if line and line ~= '' then
+          local idx = tonumber(line)
+          if idx then win:perform_action(act.MoveTab(idx), win:active_pane()) end
+        end
+      end),
+    },
+  },
+  { mods = 'LEADER', key = 'f', action = act.ShowLauncherArgs { flags = 'FUZZY|TABS' } },
+  {
+    mods = 'LEADER',
+    key = ',',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Text = 'Rename tab' },
+      },
+      initial_value = '',
+      action = wezterm.action_callback(function(win, _, line)
+        if line and line ~= '' then win:active_tab():set_title(line) end
+      end),
+    },
+  },
   { mods = 'LEADER', key = 'w', action = act.ShowTabNavigator },
-  { mods = 'LEADER', key = 's', action = act.ActivateCommandPalette },
+
+  -- Copy / paste (tmux `prefix [` copy-mode, `prefix ]` paste)
+  { mods = 'LEADER', key = '[', action = act.ActivateCopyMode },
+  { mods = 'LEADER', key = ']', action = act.PasteFrom 'Clipboard' },
+
+  -- Command-prompt style (tmux `prefix s` sessions, `prefix :` command, `prefix ?` keys)
+  { mods = 'LEADER', key = 's', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
   { mods = 'LEADER', key = ':', action = act.ActivateCommandPalette },
   { mods = 'LEADER', key = '?', action = act.ActivateCommandPalette },
 
+  -- Detach (tmux `prefix d`)
   { mods = 'LEADER', key = 'd', action = act.DetachDomain 'CurrentPaneDomain' },
+
+  -- Workspaces as tmux sessions (tmux `prefix (` / `)` prev/next session,
+  -- `prefix $` rename session, `prefix L` last session)
+  { mods = 'LEADER', key = '(', action = act.SwitchWorkspaceRelative(-1) },
+  { mods = 'LEADER', key = ')', action = act.SwitchWorkspaceRelative(1) },
+  {
+    mods = 'LEADER',
+    key = '$',
+    action = act.PromptInputLine {
+      description = wezterm.format {
+        { Attribute = { Intensity = 'Bold' } },
+        { Text = 'Rename workspace' },
+      },
+      initial_value = '',
+      action = wezterm.action_callback(function(win, _, line)
+        if line and line ~= '' then wezterm.mux.rename_workspace(line) end
+      end),
+    },
+  },
+  {
+    mods = 'LEADER|SHIFT',
+    key = 'L',
+    action = wezterm.action_callback(function(win, _)
+      local prev = leader_state.last_workspace[win:window_id()]
+      if prev then wezterm.mux.set_active_workspace(prev) end
+    end),
+  },
 
   {
     key = 'r',
@@ -135,7 +236,32 @@ local function active_workspace(window)
 end
 
 wezterm.on('update-status', function(window, _)
+  -- Track pane-focus history for LEADER + ; (last-pane toggle).
+  -- We store the active pane's 0-based index per window; LEADER + ;
+  -- reactivates the previously-focused pane.
+  local pane = window:active_pane()
+  local wid = window:window_id()
+  if pane then
+    local panes = pane:tab():panes_with_info()
+    for i, info in ipairs(panes) do
+      if info.pane_id == pane:pane_id() then
+        leader_state.last_pane_idx[wid] = i - 1
+        break
+      end
+    end
+  end
+
+  -- Track workspace history for LEADER + SHIFT + L (last-workspace jump).
+  -- _current_ws holds the workspace name we last rendered for this window;
+  -- on a change, we promote it to last_workspace so LEADER + SHIFT + L
+  -- returns there.
   local workspace = active_workspace(window)
+  if leader_state._current_ws[wid] == nil then
+    leader_state._current_ws[wid] = workspace
+  elseif leader_state._current_ws[wid] ~= workspace then
+    leader_state.last_workspace[wid] = leader_state._current_ws[wid]
+    leader_state._current_ws[wid] = workspace
+  end
   local tab = window:active_tab()
   local title = ''
   if tab then
