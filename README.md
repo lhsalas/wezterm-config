@@ -147,27 +147,59 @@ separator appear in the status area, in Hyper-OLED magenta on black.
 
 ### Bindings
 
+Bindings follow [tmux's `prefix` defaults](https://www.tmuxcheatsheet.com/) so
+muscle memory from tmux works unchanged. The prefix is **`Ctrl+B`**; press
+it once, then a key within 1 second.
+
 | Key                   | Action                                                         |
 | --------------------- | -------------------------------------------------------------- |
+| **Window / tab control** |                                                          |
 | `c`                   | New tab                                                        |
 | `x`                   | Close focused pane (with confirmation)                         |
-| `\|` / `-`            | Split pane horizontally / vertically                           |
-| `h` / `j` / `k` / `l` | Move focus to pane left / down / up / right                    |
-| arrows                | Resize focused pane in that direction                          |
-| `b` / `n`             | Previous / next tab                                            |
+| `&`                   | Close current tab (with confirmation)                          |
+| `n` / `p`             | Next / previous tab                                            |
 | `0`–`9`               | Activate tab by index (0-based: `0` is the first tab)          |
+| `f`                   | Fuzzy-find a tab by title                                      |
+| `'`                   | Prompt for a tab index; activate that tab                      |
+| `.`                   | Prompt for a new index; move current tab to that index         |
+| `,`                   | Rename current tab                                             |
+| `w`                   | Show tab navigator                                             |
+| **Splits** |                                                              |
+| `%`                   | Split pane vertically                                          |
+| `"`                   | Split pane horizontally                                        |
+| **Pane ops** |                                                              |
+| arrows                | Move focus to pane in that direction                           |
+| `Ctrl` + arrows       | Resize focused pane in that direction                         |
+| `o`                   | Rotate panes (clockwise)                                       |
+| `;`                   | Jump back to the previously-focused pane                       |
+| `q`                   | Show pane numbers and jump to one by label                     |
+| `{`                   | Swap active pane with another (keep focus)                    |
+| `}`                   | Swap active pane with another (move focus)                     |
 | `z`                   | Toggle pane zoom                                               |
 | `!`                   | Break the focused pane out into its own tab                    |
-| `o`                   | Rotate panes (clockwise)                                       |
-| `[` / `]`             | Enter copy mode / paste from clipboard                         |
-| `,`                   | Rename current tab                                             |
-| `&`                   | Close current tab (with confirmation)                          |
-| `w`                   | Show tab navigator                                             |
-| `s`                   | Open command palette (workspaces, commands, …)                 |
-| `:` / `?`             | Open command palette                                           |
+| **Copy / paste** |                                                          |
+| `[`                   | Enter copy mode (vim-like, matches `copy-mode-vi`)             |
+| `]`                   | Paste from clipboard                                           |
+| **Workspaces (tmux "sessions")** |                                              |
+| `s`                   | Fuzzy-find / switch workspace                                  |
+| `(` / `)`             | Switch to previous / next workspace (lexicographic)            |
+| `$`                   | Prompt for a name; rename current workspace                    |
+| `L`                   | Jump back to the previously-used workspace                     |
+| **Detach / commands** |                                                          |
 | `d`                   | Detach from the current pane's mux domain                      |
+| `:` / `?`             | Open command palette                                           |
 
-Copy mode itself is vim-like (matches tmux `copy-mode-vi`).
+A few tmux features don't map cleanly to WezTerm's Lua API and are
+intentionally omitted from this config:
+
+- **Layout cycling** (`prefix+Space`, `prefix+M-1..5`) — WezTerm has no
+  programmatic layout API; tab layouts are set at spawn time.
+- **Paste buffer list / choose-buffer** (`prefix+#`, `prefix+=`,
+  `prefix+-`) — `PasteFrom` only exposes `Clipboard` and
+  `PrimarySelection`; no multi-buffer store.
+- **Instant directional pane swap** (`prefix+{` / `prefix+}` swap up/down
+  by one) — only the interactive `PaneSelect` picker is available. `LEADER
+  {` / `LEADER }` use that picker instead.
 
 ### Tab title style
 
@@ -188,11 +220,15 @@ Nerd Font variant of your installed font.
 
 ### Status line
 
-The status area lives in the tab bar at the top of the window:
+The status area lives in the tab bar at the bottom of the window:
 
-- **Left**: workspace name on Hyper-OLED magenta, then the active tab's
-  title on dark gray, then (when the leader is active) the wave emoji
-  and an arrow separator.
+- **Left**: workspace name (only when `workspace ~= 'default'`) on
+  `#808080` background with black bold text, then the active tab's title
+  in white — on a true-black background for the default workspace, on a
+  slightly lighter `#1a1a1a` for non-default workspaces — then
+  (when the leader is active) the wave emoji 🌊 and an arrow separator
+  in `#808080`. Chrome stays black on the default workspace, so the OLED
+  pixels stay off until you do something.
 - **Right**: empty (clock removed).
 
 Updates run once per second (`status_update_interval = 1000`).
