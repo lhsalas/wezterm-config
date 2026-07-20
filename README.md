@@ -125,8 +125,82 @@ Open `wezterm.lua` and adjust:
 WezTerm auto-reloads the config on save. To force a reload, press
 `Ctrl+Shift+R` inside any WezTerm window.
 
+## Multiplexing & tmux-style keybindings
+
+WezTerm's mux is always on: panes, tabs, and windows are managed by a
+background server, so closing and reopening the GUI preserves your
+session state while the mux server is alive. (Note: closing the **last**
+window still quits the app — there is no implicit `tmux`-style detach on
+close. Use `prefix + d` to detach explicitly.)
+
+This config takes the multiplexing patterns from
+[dragonlobster/wezterm-config](https://github.com/dragonlobster/wezterm-config):
+the `mods = 'LEADER'` binding style, the wave-emoji status indicator,
+and the `format-tab-title` handler — but keeps the Hyper-OLED palette
+intact.
+
+### Leader key
+
+The prefix is **`Ctrl+B`**. Press it once, then a key within 1 second.
+While the leader is active, an ocean-wave emoji 🌊 and an arrow
+separator appear in the status area, in Hyper-OLED magenta on black.
+
+### Bindings
+
+| Key                   | Action                                                         |
+| --------------------- | -------------------------------------------------------------- |
+| `c`                   | New tab                                                        |
+| `x`                   | Close focused pane (with confirmation)                         |
+| `\|` / `-`            | Split pane horizontally / vertically                           |
+| `h` / `j` / `k` / `l` | Move focus to pane left / down / up / right                    |
+| arrows                | Resize focused pane in that direction                          |
+| `b` / `n`             | Previous / next tab                                            |
+| `0`–`9`               | Activate tab by index (0-based: `0` is the first tab)          |
+| `z`                   | Toggle pane zoom                                               |
+| `!`                   | Break the focused pane out into its own tab                    |
+| `o`                   | Rotate panes (clockwise)                                       |
+| `[` / `]`             | Enter copy mode / paste from clipboard                         |
+| `,`                   | Rename current tab                                             |
+| `&`                   | Close current tab (with confirmation)                          |
+| `w`                   | Show tab navigator                                             |
+| `s`                   | Open command palette (workspaces, commands, …)                 |
+| `:` / `?`             | Open command palette                                           |
+| `d`                   | Detach from the current pane's mux domain                      |
+
+Copy mode itself is vim-like (matches tmux `copy-mode-vi`).
+
+### Tab title style
+
+`format-tab-title` renders active tabs as `<index>: <title>` with the
+title drawn in black on Hyper-OLED grey (`#808080`). Tab indices are
+zero-based (`tab_and_split_indices_are_zero_based = true`), so the
+leftmost tab shows `0: title`. There is a local toggle at
+the top of `wezterm.lua`:
+
+```lua
+local tab_style = 'square'  -- or 'rounded'
+```
+
+`square` (default) gives plain rounded-off text. `rounded` adds Nerd
+Font half-circle edges (`ple_left_half_circle_thick` /
+`ple_right_half_circle_thick`) and truncates the title — requires the
+Nerd Font variant of your installed font.
+
+### Status line
+
+The status area lives in the tab bar at the top of the window:
+
+- **Left**: workspace name on Hyper-OLED magenta, then the active tab's
+  title on dark gray, then (when the leader is active) the wave emoji
+  and an arrow separator.
+- **Right**: empty (clock removed).
+
+Updates run once per second (`status_update_interval = 1000`).
+
 ## Related
 
+- Multiplexing patterns adapted from:
+  [dragonlobster/wezterm-config](https://github.com/dragonlobster/wezterm-config)
 - Alacritty sister theme: `~/Develop/Alacritty-Theme/Hyper-OLED.toml`
 - WezTerm configuration reference: <https://wezterm.org/config/files.html>
 - WezTerm color schemes: <https://wezterm.org/colorschemes/index.html>
