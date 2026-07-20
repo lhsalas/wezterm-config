@@ -27,7 +27,7 @@ config.keys = {
   { mods = 'LEADER', key = 'c', action = act.SpawnTab 'CurrentPaneDomain' },
   { mods = 'LEADER', key = 'x', action = act.CloseCurrentPane { confirm = true } },
 
-  { mods = 'LEADER', key = '|', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { mods = 'LEADER|SHIFT', key = '|', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
   { mods = 'LEADER', key = '-', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
 
   { mods = 'LEADER', key = 'h', action = act.ActivatePaneDirection 'Left' },
