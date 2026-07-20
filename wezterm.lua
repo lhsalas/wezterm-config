@@ -35,11 +35,11 @@ config.keys = {
   -- Window / tab control (tmux `prefix c`, `prefix x`, `prefix &`)
   { mods = 'LEADER', key = 'c', action = act.SpawnTab 'CurrentPaneDomain' },
   { mods = 'LEADER', key = 'x', action = act.CloseCurrentPane { confirm = true } },
-  { mods = 'LEADER', key = '&', action = act.CloseCurrentTab { confirm = true } },
+  { mods = 'LEADER|SHIFT', key = '&', action = act.CloseCurrentTab { confirm = true } },
 
   -- Splits (tmux `prefix %` vertical, `prefix "` horizontal)
-  { mods = 'LEADER', key = '%', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
-  { mods = 'LEADER', key = '"', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+  { mods = 'LEADER|SHIFT', key = '%', action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
+  { mods = 'LEADER|SHIFT', key = '"', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
 
   -- Pane navigation (vim-style; wezterm idiom; not a tmux default)
   { mods = 'LEADER', key = 'h', action = act.ActivatePaneDirection 'Left' },
@@ -66,18 +66,18 @@ config.keys = {
   },
   { mods = 'LEADER', key = 'q', action = act.PaneSelect { show_pane_ids = true } },
   {
-    mods = 'LEADER',
+    mods = 'LEADER|SHIFT',
     key = '{',
     action = act.PaneSelect { mode = 'SwapWithActiveKeepFocus' },
   },
   {
-    mods = 'LEADER',
+    mods = 'LEADER|SHIFT',
     key = '}',
     action = act.PaneSelect { mode = 'SwapWithActive' },
   },
   { mods = 'LEADER', key = 'z', action = act.TogglePaneZoomState },
   {
-    mods = 'LEADER',
+    mods = 'LEADER|SHIFT',
     key = '!',
     action = wezterm.action_callback(function(_, pane)
       pane:move_to_new_tab()
@@ -90,7 +90,7 @@ config.keys = {
   { mods = 'LEADER', key = 'n', action = act.ActivateTabRelative(1) },
   { mods = 'LEADER', key = 'p', action = act.ActivateTabRelative(-1) },
   {
-    mods = 'LEADER',
+    mods = 'LEADER|SHIFT',
     key = "'",
     action = act.PromptInputLine {
       description = wezterm.format {
@@ -146,18 +146,18 @@ config.keys = {
 
   -- Command-prompt style (tmux `prefix s` sessions, `prefix :` command, `prefix ?` keys)
   { mods = 'LEADER', key = 's', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { mods = 'LEADER', key = ':', action = act.ActivateCommandPalette },
-  { mods = 'LEADER', key = '?', action = act.ActivateCommandPalette },
+  { mods = 'LEADER|SHIFT', key = ':', action = act.ActivateCommandPalette },
+  { mods = 'LEADER|SHIFT', key = '?', action = act.ActivateCommandPalette },
 
   -- Detach (tmux `prefix d`)
   { mods = 'LEADER', key = 'd', action = act.DetachDomain 'CurrentPaneDomain' },
 
   -- Workspaces as tmux sessions (tmux `prefix (` / `)` prev/next session,
   -- `prefix $` rename session, `prefix L` last session)
-  { mods = 'LEADER', key = '(', action = act.SwitchWorkspaceRelative(-1) },
-  { mods = 'LEADER', key = ')', action = act.SwitchWorkspaceRelative(1) },
+  { mods = 'LEADER|SHIFT', key = '(', action = act.SwitchWorkspaceRelative(-1) },
+  { mods = 'LEADER|SHIFT', key = ')', action = act.SwitchWorkspaceRelative(1) },
   {
-    mods = 'LEADER',
+    mods = 'LEADER|SHIFT',
     key = '$',
     action = act.PromptInputLine {
       description = wezterm.format {
